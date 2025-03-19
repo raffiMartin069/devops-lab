@@ -1,0 +1,22 @@
+services:
+  django:
+    build:
+      dockerfile: ./Dockerfile
+    command: gunicorn mysite.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - 8000
+    volumes:
+      - static_volume:/app/staticfiles
+  nginx:
+    build:
+      dockerfile: ./proxy/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/app/staticfiles
+    depends_on:
+      - django
+
+
+volumes:
+  static_volume:
